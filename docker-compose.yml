@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  flask:
+    build: 
+      context: ./flask
+      dockerfile: Dockerfile
+    image: distroless-flask
+    container_name: flask
+    restart: always
+    environment:
+      - FLASK_ENV=DEBUG
+    expose:
+      - "5000"
+
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: distroless-nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - flask
