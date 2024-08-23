@@ -25,8 +25,8 @@ jobs:
           echo $DOCKER_PAT | docker login -u $DOCKER_USERNAME --password-stdin
           docker push $DOCKER_USERNAME/$FLASK_IMAGE
           docker push $DOCKER_USERNAME/$NGINX_IMAGE
-          echo -n $COSIGN_PASSWORD | cosign sign --key env://COSIGN_KEY -a "Author=root@thowbikdustan.me" $DOCKER_USERNAME/$FLASK_IMAGE
-          echo -n $COSIGN_PASSWORD | cosign sign --key env://COSIGN_KEY -a "Author=root@thowbikdustan.me" $DOCKER_USERNAME/$NGINX_IMAGE
+          echo -n $COSIGN_PASSWORD | cosign sign --yes --key env://COSIGN_KEY -a "Author=root@thowbikdustan.me" $DOCKER_USERNAME/$FLASK_IMAGE
+          echo -n $COSIGN_PASSWORD | cosign sign --yes --key env://COSIGN_KEY -a "Author=root@thowbikdustan.me" $DOCKER_USERNAME/$NGINX_IMAGE
         env:
           DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
           DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
