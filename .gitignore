@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#keys and credentials
+*.key
+credential*
+credentials.*
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.vscode/
+
+
+#Web stuffs
+instance/
+.webassets-cache
+
+# DB stuffs
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Testing Files
+test.py
+example.py
+testing.py
+
+#Ignoring Development test file
+Dockerfile.Dev
+docker-compose-dev.yml
