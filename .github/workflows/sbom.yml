@@ -1,0 +1,35 @@
+name: SBOM
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Application Build & Signing]
+    types:
+      - completed
+
+jobs:
+  generate-sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate SBOM
+        run: |
+          echo $DOCKER_PAT | docker login -u $DOCKER_USERNAME --password-stdin  
+        env: 
+          DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+          DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+        
+      - name: SBOM Creation - flask container
+        uses: anchore/sbom-action@v0
+        with:
+          image: thowbikdustan/distroless-flask
+          format: spdx
+          artifact-name: sbom_flask.spdx
+          output-file: /tmp/sbom_flask.spdx
+
+      - name: SBOM Creation - nginx container
+        uses: anchore/sbom-action@v0
+        with:
+          image: thowbikdustan/distroless-nginx
+          format: spdx
+          artifact-name: sbom_nginx.spdx
+          output-file: /tmp/sbom_nginx.spdx
