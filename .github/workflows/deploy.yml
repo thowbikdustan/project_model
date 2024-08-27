@@ -1,0 +1,31 @@
+name: Application Deployment
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["SBOM"]
+    types:
+      - completed
+
+jobs:
+  application-deployment:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+      - name: Deploying to server
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          scp docker-compose.yml $DEPLOYMENT_USER@$DEPLOYMENT_HOST:~/
+          scp deploy.sh $DEPLOYMENT_USER@$DEPLOYMENT_HOST:~/
+          scp cosign.pub $DEPLOYMENT_USER@$DEPLOYMENT_HOST:~/
+          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "sh deploy.sh"
+          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "rm deploy.sh"
+          rm ~/.ssh/id_rsa
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOYMENT_USER: ${{ secrets.DEPLOYMENT_USER }}
+          DEPLOYMENT_HOST: ${{ secrets.DEPLOYMENT_HOST }}
