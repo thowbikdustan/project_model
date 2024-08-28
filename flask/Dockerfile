@@ -1,4 +1,4 @@
-# Use an official Python image as a parent image
+# STAGE 1 -- Use an official Python image as a parent image
 FROM python:3.12-slim as flask_image
 
 RUN apt-get update && apt-get -y upgrade && \
@@ -6,7 +6,7 @@ RUN apt-get update && apt-get -y upgrade && \
     pip install --upgrade pip
 RUN pip install flask && pip install uwsgi
 
-# Using chainguard's python distroless image for final build
+# STAGE 2 -- Using chainguard's python distroless image for final build
 FROM cgr.dev/chainguard/python:latest
 
 ENV LD_RUN_PATH=/usr/local/lib
